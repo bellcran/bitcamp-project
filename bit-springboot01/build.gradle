@@ -66,9 +66,3 @@ compileJava { // 자바 컴파일러에게 전달하는 정보.
 bootRun {
   mainClassName = 'bigdata3.Application'
 }
-
-
-
-
-
-
