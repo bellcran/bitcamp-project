@@ -54,9 +54,6 @@ dependencies { // 다운로드 받을 의존 라이브러리 목록
     
     // testCompile => 테스트할 때 사용할 라이브러리 
     testCompile("org.springframework.boot:spring-boot-starter-test")
-    
-    compile("org.springframework.cloud:spring-cloud-starter-aws")
-    compile("org.springframework.cloud:spring-cloud-aws-jdbc")
 }
 
 compileJava { // 자바 컴파일러에게 전달하는 정보. 
@@ -68,9 +65,3 @@ compileJava { // 자바 컴파일러에게 전달하는 정보.
 bootRun {
   mainClassName = 'bigdata3.Application'
 }
-
-
-
-
-
-
