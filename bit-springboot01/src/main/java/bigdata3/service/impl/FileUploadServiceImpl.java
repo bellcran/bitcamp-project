@@ -11,7 +11,7 @@ import bigdata3.service.FileUploadService;
 
 @Service
 public class FileUploadServiceImpl implements FileUploadService {
-  static final String UPLOAD_DIR = "/home/ec2-user/tmp";
+  static final String UPLOAD_DIR = "/home/ec2-user/tmp/";
   static final String PREFIX = "file_";
   
   @Override
