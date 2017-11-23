@@ -1,6 +1,6 @@
 
-const request = require('request');
 const sendAPI = require("./send")
+const openAPI = require('../rest-api/openapi')
 const handleReceiveMessage = (event) => {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
@@ -17,6 +17,15 @@ const handleReceiveMessage = (event) => {
 
   if (messageText == 'led') {
     sendAPI.sendLedMessage(senderID)
+  } else if (messageText.startsWith('searchAddress:')) { // 공공데이터포털 - 주소 관련 오픈API 사용
+    try {
+      var arr = messageText.split(':')[1].split('=')
+      openAPI.searchNewAddress(arr[0], arr[1], (msg) => {
+          sendAPI.sendTextMessage(senderID, msg);
+      });
+    } catch (err) {
+      console.log(err)
+    }
   } else {
     sendAPI.sendTextMessage(senderID, messageText)
   }

@@ -2,7 +2,7 @@ const request = require('request');
 const searchNewAddress = (SearchWord) => {
   request({
     url : 'http://openapi.epost.go.kr/postal/retrieveNewAdressAreaCdService/retrieveNewAdressAreaCdService/getNewAddressListAreaCd' + 
-          '?' + encodeURIComponent('ServiceKey') + '=RVa4aHtfnNZMBYNcpc6X3J%2Flo%2BN2hTfBIKxViV7JEOdmgNQXdVuBoLWGcC%2BywH67XDYAA%2BbS3cOLEPr9tSDgtw%3D%3D' + 
+          '?' + encodeURIComponent('ServiceKey') + '오픈API키값' + 
           '&' + encodeURIComponent('searchSe') + '=' + encodeURIComponent('dong') + 
           '&' + encodeURIComponent('srchwrd') + '=' + encodeURIComponent(SearchWord) +
           '&' + encodeURIComponent('countPerPage') + '=' + encodeURIComponent('10') + 
