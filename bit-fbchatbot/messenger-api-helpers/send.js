@@ -16,48 +16,6 @@ const sendTextMessage = (recipientId, messageText) => {
   api.callMessagesAPI(messageData);
 };
 
-
-const sendMenuMessage = (recipientId) => {
-  // message-handler.js  로 옮겼다.
-};
-
-const sendAddressSearchMessage = (recipientId) => {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      "attachment":{
-        "type":"template",
-        "payload":{
-          "template_type":"button",
-          "text":"검색 항목",
-          "buttons":[
-            {
-              "type":"postback",
-              "title":"동이름",
-              "payload":"addr_dong"
-            },
-            {
-              "type":"postback",
-              "title":"도로명",
-              "payload":"addr_road"
-            },
-            {
-              "type":"postback",
-              "title":"우편번호",
-              "payload":"addr_post"
-            }
-          ]
-        }
-      }
-    }
-  };
-
-  api.callMessagesAPI(messageData);
-};
-
-
 const sendImageMessage = (recipientId) => {
   var messageData = {
     recipient: {
@@ -145,38 +103,6 @@ const sendButton2Message = (recipientId) => {
   api.callMessagesAPI(messageData);
 };
 
-
-const sendLedMessage = (recipientId) => {
-  var messageData = {
-    recipient: {
-      id: recipientId
-    },
-    message: {
-      "attachment":{
-        "type":"template",
-        "payload":{
-          "template_type":"button",
-          "text":"LED 스위치",
-          "buttons":[
-            {
-              "type":"postback",
-              "title":"LED On",
-              "payload":"led_on"
-            },
-            {
-              "type":"postback",
-              "title":"LED Off",
-              "payload":"led_off"
-            }
-          ]
-        }
-      }
-    }
-  };
-
-  api.callMessagesAPI(messageData);
-};
-
 const sendGenericMessage = (recipientId) => {
   var messageData = {
     recipient: {
@@ -223,12 +149,8 @@ const sendGenericMessage = (recipientId) => {
 
   api.callMessagesAPI(messageData);
 };
-
 module.exports = {
-  sendTextMessage,
-  sendMenuMessage,
-  sendLedMessage,
-  sendAddressSearchMessage
+  sendTextMessage
   //sendImageMessage,
   //sendButton1Message,
   //sendButton2Message,

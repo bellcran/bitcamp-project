@@ -13,7 +13,7 @@ const getHandler = (message) => {
   return messageHandler[message];
 }
 // "help" 메시지를 처리할 함수 등록
-addMessage("help", (senderId) => {
+addMessage("help", (recipientId) => {
   var messageData = {
     recipient: {
       id: recipientId
@@ -28,17 +28,17 @@ addMessage("help", (senderId) => {
             {
               "type":"postback",
               "title":"LED",
-              "payload":"menu_led"
+              "payload":"/led" // 버튼 클릭 시, 서버에 다시 보내지는 값; postback-handler 에 구현
             },
             {
               "type":"postback",
               "title":"계산기",
-              "payload":"menu_calc"
+              "payload":"/calc"
             },
             {
               "type":"postback",
               "title":"주소검색",
-              "payload":"menu_addr"
+              "payload":"/addr"
             }
           ]
         }

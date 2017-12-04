@@ -1,7 +1,7 @@
-
 const sendAPI = require("./send")
 const openAPI = require("../rest-api/openapi")
 const messageHandler = require("./message-handler")
+const postbackHandler = require("./postback-handler")
 const handleReceiveMessage = (event) => {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
@@ -58,17 +58,14 @@ const handleReceivePostback = (event) => {
 
   console.log("Received postback for user %d and page %d with payload '%s' " + 
   "at %d", senderID, recipientID, payload, timeOfPostback);
-
-  var menu = global[senderID].menu;
-
-  if (menu == 'help') {
-      menuHelp(senderID, payload);
-  } else if (menu == 'led') {
-      menuLed(senderID, payload);
-  } else if (menu == 'addr') {
-      menuAddr(senderID, payload);
+ 
+  // 사용자가 클릭한 버튼의 postback 을 처리할 함수를 꺼낸다.
+  var handler = postbackHandler.getHandler(payload)
+  if (handler) {// postback 을 처리할 함수가 있다면,
+      global[senderID].menu = payload
+      handler(senderID) // 그 함수를 호출한다.
   } else {
-      sendAPI.sendTextMessage(senderID, "메뉴를 다시 요청하세요!");
+    sendAPI.sendTextMessage(senderID, "유효한 명령이 아닙니다.");
   }
 }
 
@@ -84,19 +81,6 @@ const menuHelp = (senderID, payload) => {
   } else if (payload == 'menu_addr') {
       sendAPI.sendAddressSearchMessage(senderID);
       global[senderID].menu = 'addr'; // 이 사용자의 현재 메뉴는 '주소검색'이다.
-  }
-};
-
-const menuLed = (senderID, payload) => {
-  if (payload == 'led_on') {
-      global[senderID].menu = 'led_on';
-      sendAPI.sendTextMessage(senderID, 'LED를 켭니다.')
-      // 나중에 스프링부트에 LED를 켜는 명령을 보낼 것이다.
-     
-  } else if (payload == 'led_off') {
-      global[senderID].menu = 'led_off';
-      sendAPI.sendTextMessage(senderID, 'LED를 끕니다.')
-      // 나중에 스프링부트에 LED를 끄는 명령을 보낼 것이다.
   }
 };
 
@@ -131,22 +115,6 @@ const menuCalc = (senderID, messageText) => {
           '계산식이 옳지 않습니다.\n예)값1 연산자 값2')
   }
 };
-
-const menuAddr = (senderID, payload) => {
-  if (payload == 'addr_dong') {
-      sendAPI.sendTextMessage(senderID, '동 이름?');
-      global[senderID].menu = 'addr_dong';
-
-  } else if (payload == 'addr_road') {
-      sendAPI.sendTextMessage(senderID, '도로명?');
-      global[senderID].menu = 'addr_road';
-
-  } else if (payload == 'addr_post') {
-      sendAPI.sendTextMessage(senderID, '우편번호?');
-      global[senderID].menu = 'addr_post';
-  }
-};
-
 module.exports = {
   handleReceiveMessage,
   handleReceivePostback
