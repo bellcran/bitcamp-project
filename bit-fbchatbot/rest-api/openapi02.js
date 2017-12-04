@@ -29,32 +29,32 @@ const searchNewAddress = (type, searchWord, callback) => { // callback: 작업�
     console.log('====> Reponse received', body);
 
     parseString(body, (err, result) => {
-      try {
-        var headers = result.NewAddressListResponse.cmmMsgHeader[0];
-        var totalCount = headers.totalCount[0];
-        var countPerPage = headers.countPerPage[0];
-        var currentPage = headers.currentPage[0];
-        
-        console.log(["주소 검색 결과"])
-        console.log(totalCount);
-        console.log(countPerPage);
-        console.log(currentPage);
-        console.log('------------------------------');
-    
-        var message = '';
-        var addrList = result.NewAddressListResponse.newAddressListAreaCd;
+      var headers = result.NewAddressListResponse.cmmMsgHeader[0];
+      var totalCount = headers.totalCount[0];
+      var countPerPage = headers.countPerPage[0];
+      var currentPage = headers.currentPage[0];
+      
+      console.log(["주소 검색 결과"])
+      console.log(totalCount);
+      console.log(countPerPage);
+      console.log(currentPage);
+      console.log('------------------------------');
+  
+      var message = '';
+      var addrList = result.NewAddressListResponse.newAddressListAreaCd;
 
+      if(addrList === undefined || addrList === null){
+        message = "검색결과가 없습니다."
+      } else {
         for (var addr of addrList) {
-          message += '[' + addr.zipNo[0] + ']\n'
-          message += addr.rnAdres[0] + '\n';
-          message += addr.lnmAdres[0] + '\n';
-          message += '\n';
+            message += '[' + addr.zipNo[0] + ']\n'
+            message += addr.rnAdres[0] + '\n';
+            message += addr.lnmAdres[0] + '\n';
+            message += '\n';
         }
-        callback(message)
-        //callback(message) // 로컬 테스트용; 막고 테스트한다.
-      } catch (err) {
-        callback("주소 검색 결과가 없습니다.")
       }
+      callback(message)
+      //callback(message) // 로컬 테스트용; 막고 테스트한다.
     });
   });  
 }

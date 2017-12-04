@@ -4,7 +4,7 @@
 //import express from 'express'
 const express = require("express")
 // 메시지 이벤트를 처리할 API를 가져온다
-const receiveAPI = require("../messenger-api-helpers/receive.js")
+const recieveAPI = require("../messenger-api-helpers/receive.js")
 // 클라이언트 요청이 들어왔을 때 함수를 호출해 주는 객체
 const router = express.Router();
 // 페이스북 서버에서 이 서버의 유효성을 검사하기 위해 요청 
@@ -52,26 +52,22 @@ router.post('/', (req, res) => { // narrow 문법; function 대신 화살표 사
 
       // 메세지에 들어 있는 각각의 이벤트를 처리한다.
       entry.messaging.forEach(function(event) {
-
-        // 접속한 사용자의 상태 정보를 저장할 객체를 준비한다.
-        // => 일종의 세션 객체로서 역할을 할 것이다.
-        var senderID = event.sender.id;
-        if (!global[senderID]) {  // 접속한 사용자를 위한 보관소가 없다면,
-          global[senderID] = {
-            'user': senderID
-          }; // 빈 보관소를 만들어 글로벌 객체에 저장한다.
-        }
-
         if (event.message) {
-          console.log('event.message===> ', event.message)
-          receiveAPI.handleReceiveMessage(event);
+
+          console.log("event.message ====> ", event.message) // 로그 출력 확인 필요 
+          recieveAPI.handleReceiveMessage(event)
+          //receivedMessage(event);
 
         } else if (event.postback) {
-          console.log('event.postback===> ', event.postback)
-          receiveAPI.handleReceivePostback(event);  
+
+          console.log("event.postback ====>", event.postback) // 로그 출력 확인 필요
+          //receivedPostback(event);   
+          recieveAPI.handleReceivePostback(event)
 
         } else {
-          //console.log("unknown event===> ", event);
+
+          //console.log("unknown event ====> ", event); // 로그 출력 정리
+
         }
         
       }); //entry.messaging.forEach()

@@ -1,6 +1,7 @@
 
 const sendAPI = require("./send")
-const openAPI = require('../rest-api/openapi')
+const openAPI = require("../rest-api/openapi")
+const messageHandler = require("./message-handler")
 const handleReceiveMessage = (event) => {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
@@ -15,21 +16,39 @@ const handleReceiveMessage = (event) => {
   var messageText = message.text; 
   var messageAttachments = message.attachments; // 사진, 음성 첨부
 
-  if (messageText == 'led') {
-    sendAPI.sendLedMessage(senderID)
-  } else if (messageText.startsWith('searchAddress:')) { // 공공데이터포털 - 주소 관련 오픈API 사용
-    try {
-      var arr = messageText.split(':')[1].split('=')
-      openAPI.searchNewAddress(arr[0], arr[1], (msg) => {
-          sendAPI.sendTextMessage(senderID, msg);
-      });
-    } catch (err) {
-      console.log(err)
-    }
+  var menu = global[senderID].menu; // 사용자의 현재 메뉴
+  
+  // 사용자가 입력한 메시지를 처리할 함수를 꺼낸다.
+  var handler = messageHandler.getHandler(messageText)
+  if (handler) {// 메시지를 처리할 함수가 있다면,
+      handler(senderID) // 그 함수를 호출한다.
   } else {
-    sendAPI.sendTextMessage(senderID, messageText)
+    sendAPI.sendTextMessage(senderID, "유효한 명령이 아닙니다.");
   }
-}
+  /*if (messageText == 'help') {
+      sendAPI.sendMenuMessage(senderID);
+      // 현재 help를 출력한 상태임을 저장한다.
+      global[senderID].menu = 'help';
+
+  } else if (menu == 'calc') {
+      menuCalc(senderID, messageText);
+
+  } else if (menu.startsWith('addr_')) { // 동,도로명,우편번호를 검색한다면,
+      try {
+          var type = menu.substring(5);
+          var searchWord = messageText;
+          openAPI.searchNewAddress(type, searchWord, (msg) => {
+              sendAPI.sendTextMessage(senderID, msg);
+          });
+      } catch (err) {
+          sendAPI.sendTextMessage('주소 검색을 할 수 없습니다!');
+          console.log(err);
+      }
+  } else {
+      sendAPI.sendTextMessage(senderID, messageText);
+  }*/
+
+};
 
 const handleReceivePostback = (event) => {
   var senderID = event.sender.id;
@@ -40,33 +59,93 @@ const handleReceivePostback = (event) => {
   console.log("Received postback for user %d and page %d with payload '%s' " + 
   "at %d", senderID, recipientID, payload, timeOfPostback);
 
-  if (payload == "led_on") {
-    sendAPI.sendTextMessage(senderID, "전구를 켜겠습니다.");
-    request({
-      uri: 'http://www.kjhak.xyz:8080/chatbot/json/led/on',
-      qs: { "senderID": senderID },
-      method: 'POST'
-    }, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        console.log("SpringBoot 응답 ====>", body)
-        var obj = JSON.parse(body)
-        var senderID = obj.data.senderID;
-        if (obj.state == "success") {
-          sendAPI.sendTextMessage(senderID, "전구-" + obj.data.state);
-        } else {
-          sendAPI.sendTextMessage(senderID, "전구 제어 실패");
-        }
-      } else {
-        console.log("SpringBoot 요청 오류", body)
-        sendAPI.sendTextMessage(senderID, "전구 제어 실패");
-      }
-    })
-  } else if (payload == "led_off") {
-    sendAPI.sendTextMessage(senderID, "전구를 끄겠습니다.");
+  var menu = global[senderID].menu;
+
+  if (menu == 'help') {
+      menuHelp(senderID, payload);
+  } else if (menu == 'led') {
+      menuLed(senderID, payload);
+  } else if (menu == 'addr') {
+      menuAddr(senderID, payload);
   } else {
-    sendAPI.sendTextMessage(senderID, "실행할 수 없는 명령입니다.");
+      sendAPI.sendTextMessage(senderID, "메뉴를 다시 요청하세요!");
   }
 }
+
+const menuHelp = (senderID, payload) => {
+  if (payload == 'menu_led') {
+      sendAPI.sendLedMessage(senderID);
+      global[senderID].menu = 'led'; // 이 사용자의 현재 메뉴는 'LED 스위치'이다.
+
+  } else if (payload == 'menu_calc') {
+      sendAPI.sendTextMessage(senderID, '식을 입력하세요.\n예)2 + 3');
+      global[senderID].menu = 'calc'; // 이 사용자의 현재 메뉴는 '계산기'이다.
+
+  } else if (payload == 'menu_addr') {
+      sendAPI.sendAddressSearchMessage(senderID);
+      global[senderID].menu = 'addr'; // 이 사용자의 현재 메뉴는 '주소검색'이다.
+  }
+};
+
+const menuLed = (senderID, payload) => {
+  if (payload == 'led_on') {
+      global[senderID].menu = 'led_on';
+      sendAPI.sendTextMessage(senderID, 'LED를 켭니다.')
+      // 나중에 스프링부트에 LED를 켜는 명령을 보낼 것이다.
+     
+  } else if (payload == 'led_off') {
+      global[senderID].menu = 'led_off';
+      sendAPI.sendTextMessage(senderID, 'LED를 끕니다.')
+      // 나중에 스프링부트에 LED를 끄는 명령을 보낼 것이다.
+  }
+};
+
+const menuCalc = (senderID, messageText) => {
+  // 현재 계산기 메뉴일 때는 사용자가 입력한 값이 
+  // 계산식이라고 가정하고 메시지를 분석한다.
+  global[senderID].menu = 'calc';
+  try {
+      var tokens = messageText.split(' ');
+      if (tokens.length != 3)
+          throw '계산 형식 오류';
+
+      var a = parseInt(tokens[0]);
+      var op = tokens[1];
+      var b = parseInt(tokens[2]);
+      var result = 0;
+      switch (op) {
+      case '+': result = a + b; break;
+      case '-': result = a - b; break;
+      case '*': result = a * b; break;
+      case '/': result = a / b; break;
+      case '%': result = a % b; break;
+      default:
+          sendAPI.sendTextMessage(senderID, 
+              '+, -, *, /, % 연산자만 사용할 수 있습니다.')
+          return;
+      }
+      sendAPI.sendTextMessage(senderID, 
+          '계산 결과는 ' + result + ' 입니다.')
+  } catch (exception) {
+      sendAPI.sendTextMessage(senderID, 
+          '계산식이 옳지 않습니다.\n예)값1 연산자 값2')
+  }
+};
+
+const menuAddr = (senderID, payload) => {
+  if (payload == 'addr_dong') {
+      sendAPI.sendTextMessage(senderID, '동 이름?');
+      global[senderID].menu = 'addr_dong';
+
+  } else if (payload == 'addr_road') {
+      sendAPI.sendTextMessage(senderID, '도로명?');
+      global[senderID].menu = 'addr_road';
+
+  } else if (payload == 'addr_post') {
+      sendAPI.sendTextMessage(senderID, '우편번호?');
+      global[senderID].menu = 'addr_post';
+  }
+};
 
 module.exports = {
   handleReceiveMessage,
