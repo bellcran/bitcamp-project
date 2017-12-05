@@ -50,19 +50,17 @@ const searchNewAddress = (type, searchWord, callback) => { // callback: 작업�
           message += addr.lnmAdres[0] + '\n';
           message += '\n';
         }
-        callback(message)
-        //callback(message) // 로컬 테스트용; 막고 테스트한다.
+        callback(message) // 로컬 테스트용; 막고 테스트한다.
       } catch (err) {
         callback("주소 검색 결과가 없습니다.")
       }
     });
   });  
 }
-//searchNewAddress('dong', '길음동 1284')
+//searchNewAddress('dong', '길음동 1284') // 로컬 테스트용;
 //searchNewAddress('road', '충장로123번길 26');
 //searchNewAddress('dong', '행신동 1002');
 //searchNewAddress('post', '17512');
-
 module.exports = {
   searchNewAddress
 }
