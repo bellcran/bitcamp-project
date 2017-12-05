@@ -12,7 +12,6 @@ const sendTextMessage = (recipientId, messageText) => {
       text: messageText
     }
   };
-
   api.callMessagesAPI(messageData);
 };
 
@@ -31,7 +30,6 @@ const sendImageMessage = (recipientId) => {
       }
     }
   };
-
   api.callMessagesAPI(messageData);
 };
 
@@ -67,10 +65,8 @@ const sendButton1Message = (recipientId) => {
       }
     }
   };
-
   api.callMessagesAPI(messageData);
 };
-
 
 const sendButton2Message = (recipientId) => {
   var messageData = {
@@ -99,7 +95,6 @@ const sendButton2Message = (recipientId) => {
       }
     }
   };
-
   api.callMessagesAPI(messageData);
 };
 
@@ -146,7 +141,6 @@ const sendGenericMessage = (recipientId) => {
       }
     }
   };  
-
   api.callMessagesAPI(messageData);
 };
 module.exports = {

@@ -92,6 +92,9 @@ addPostback("/addr/road", (recipientId) => {
 addPostback("/addr/post", (recipientId) => {
   sendAPI.sendTextMessage(recipientId, '우편번호?');
 })
+addPostback('/calc', (recipientId) => {
+  sendAPI.sendTextMessage(recipientId, '식을 입력하세요.\n예)2 + 3');
+})
 module.exports = {
   getHandler
 }
