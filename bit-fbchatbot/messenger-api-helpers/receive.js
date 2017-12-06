@@ -22,6 +22,9 @@ const handleReceiveMessage = (event) => {
   var handler = messageHandler.getHandler(messageText)
   if (handler) {// 메시지를 처리할 함수가 있다면,
       handler(senderID) // 그 함수를 호출한다.
+  } else if (menu) {
+    handler = messageHandler.getHandler(menu) // 메뉴의 메시지를 처리할 함수를 꺼낸다.
+    handler(senderID, messageText) 
   } else {
     sendAPI.sendTextMessage(senderID, "유효한 명령이 아닙니다.");
   }
