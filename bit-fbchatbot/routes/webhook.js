@@ -5,6 +5,7 @@
 const express = require("express")
 // 메시지 이벤트를 처리할 API를 가져온다
 const receiveAPI = require("../messenger-api-helpers/receive.js")
+const sendAPI = require('../messenger-api-helpers/send');
 // 클라이언트 요청이 들어왔을 때 함수를 호출해 주는 객체
 const router = express.Router();
 // 페이스북 서버에서 이 서버의 유효성을 검사하기 위해 요청 
@@ -31,10 +32,6 @@ router.get('/', function(req, res) {
 // 5) 사용자의 메신저에 응답 내용을 출력된다.
 // Message processing
 router.post('/', (req, res) => { // narrow 문법; function 대신 화살표 사용
-
-  // 메신저 서버에서 요청을 받으면 일단 응답한다
-  // 이유? 20초 이내에 응답을 해야 한다. 일단 응답한 후 요청 처리 작업을 해도 된다.
-  res.sendStatus(200);
   // 응답한 후 요청을 처리하는 작업을 수행한다.
   // => 메신저 서버가 보낸 데이터를 꺼낸다
   var data = req.body;
@@ -65,22 +62,30 @@ router.post('/', (req, res) => { // narrow 문법; function 대신 화살표 사
         if (event.message) {
           console.log('event.message===> ', event.message)
           receiveAPI.handleReceiveMessage(event);
-
+          //sendAPI.sendTextMessage(senderID,  event.message.text);
         } else if (event.postback) {
           console.log('event.postback===> ', event.postback)
           receiveAPI.handleReceivePostback(event);  
-
+          //sendAPI.sendTextMessage(senderID, event.postback.payload);
         } else {
-          //console.log("unknown event===> ", event);
+          console.log("unknown event===> ")//, event);
         }
         
       }); //entry.messaging.forEach()
 
     }); //data.entry.forEach()
- 
-  }  //if (data.object === 'page') {}
+
+    // 메신저 서버에서 요청을 받으면 일단 응답한다.
+    // 이유? 
+    // - 20초 이내에 응답을 해야한다.
+    // - 일단 응답한 후 요청 처리 작업을 해도 된다.
+    res.sendStatus(200); 
+
+  }  else { // if (data.object === 'page') 
+    // 페이지가 받은 메시지가 아니면 '404 Not Found'를 응답한다.
+    res.sendStatus(404);
+  }
 
 }); // router.post('/', ....)
-
 //export default router
 module.exports = router

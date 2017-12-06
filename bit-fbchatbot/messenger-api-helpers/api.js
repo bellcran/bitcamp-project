@@ -11,17 +11,19 @@ const callMessagesAPI = (messageData) => {
     if (!error && response.statusCode == 200) {
       var recipientId = body.recipient_id;
       var messageId = body.message_id;
-
-      console.log("Successfully sent generic message with id %s to recipient %s", 
-        messageId, recipientId);
+      if (messageId) {
+          console.log("Successfully sent message with id %s to recipient %s", 
+              messageId, recipientId);
+      } else {
+          console.log("Successfully called Send API for recipient %s", 
+              recipientId);
+      }
     } else {
-      console.error("Unable to send message.");
-      //console.error(response); // 로그출력 정리, 출력이 너무 많아 이 부분을 제외했다.
-      console.error(error);
+      console.error("Failed calling Send API", 
+      error, body);
     }
   });  
 }
-
 module.exports = {
   callMessagesAPI
 }
