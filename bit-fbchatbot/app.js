@@ -6,9 +6,7 @@ const bodyParser = require('body-parser');
 const request = require('request');
 // .env 파일의 내용을 로딩한다.
 require('dotenv').config({path: '/home/ec2-user/vars/.env'})
-
 const app = express()
-
 // json 형식으로 클라이언트가 보낸 데이터를 처리하는 객체 등록
 // => 이 객체를 등록하지 않으면 json 형식으로 전달받은 데이터를 다룰 수 없다.
 app.use(bodyParser.json()); 
@@ -20,7 +18,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 // => 실행하지 않고 그대로 읽어서 클라이언트에게 보내는 파일
 // => .html, .gif, .jpg, .css, .js
 app.use(express.static('public'))
-
 // 클라이언트 요청을 처리할 모듈을 가져온다.
 //import root from "./routes/root.js"
 //import webhook from "./routes/webhook.js"
@@ -48,7 +45,6 @@ http.createServer(app).listen(9999, function() {
   console.log('서버가 시작되었습니다!')
 })
 */
-
 // nodejs 모듈 설치
 // => npm(node package manager) 프로그램을 이용하여 모듈을 설치한다.
 // => npm install 모듈명1 모듈명2 모듈명3 ...
@@ -71,6 +67,3 @@ http.createServer(app).listen(9999, function() {
 //    => 기존에 다운로드 받은 node_modules 폴더 및 그 하위 폴더를 모두 제거하라.
 //    => "npm install" 명령 실행
 //       package.json 파일에 등록된 모든 모듈을 자동으로 다운로드 받아 설치한다.
-// 
-//
-

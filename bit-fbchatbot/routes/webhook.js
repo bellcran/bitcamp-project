@@ -23,7 +23,6 @@ router.get('/', function(req, res) {
       res.sendStatus(403);
   }
 });
-
 // 메시지 처리 
 // 1) 사용자가 페이지북 페이지로 메시지를 보낸다.
 // 2) 페이스북 메신저 서버가 이 서버의 '/webhook' URL POST 요청한다.
@@ -43,13 +42,10 @@ router.post('/', (req, res) => { // narrow 문법; function 대신 화살표 사
       if (!entry.messaging) {
         return
       }
-      
       var pageID = entry.id;
       var timeOfEvent = entry.time;
-
       // 메세지에 들어 있는 각각의 이벤트를 처리한다.
       entry.messaging.forEach(function(event) {
-
         // 접속한 사용자의 상태 정보를 저장할 객체를 준비한다.
         // => 일종의 세션 객체로서 역할을 할 것이다.
         var senderID = event.sender.id;
@@ -58,7 +54,6 @@ router.post('/', (req, res) => { // narrow 문법; function 대신 화살표 사
             'user': senderID
           }; // 빈 보관소를 만들어 글로벌 객체에 저장한다.
         }
-
         if (event.message) {
           console.log('event.message===> ', event.message)
           receiveAPI.handleReceiveMessage(event);
@@ -70,22 +65,17 @@ router.post('/', (req, res) => { // narrow 문법; function 대신 화살표 사
         } else {
           console.log("unknown event===> ")//, event);
         }
-        
       }); //entry.messaging.forEach()
-
     }); //data.entry.forEach()
-
     // 메신저 서버에서 요청을 받으면 일단 응답한다.
     // 이유? 
     // - 20초 이내에 응답을 해야한다.
     // - 일단 응답한 후 요청 처리 작업을 해도 된다.
     res.sendStatus(200); 
-
   }  else { // if (data.object === 'page') 
     // 페이지가 받은 메시지가 아니면 '404 Not Found'를 응답한다.
     res.sendStatus(404);
   }
-
 }); // router.post('/', ....)
 //export default router
 module.exports = router

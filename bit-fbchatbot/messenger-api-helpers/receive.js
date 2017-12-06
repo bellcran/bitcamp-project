@@ -7,17 +7,13 @@ const handleReceiveMessage = (event) => {
   var recipientID = event.recipient.id;
   var timeOfMessage = event.timestamp;
   var message = event.message;
-
   console.log("Received message for user %d and page %d at %d with message:", 
     senderID, recipientID, timeOfMessage);
   //console.log(JSON.stringify(message)); // 로그 출력 정리
-
   var messageId = message.mid;
   var messageText = message.text; 
   var messageAttachments = message.attachments; // 사진, 음성 첨부
-
   var menu = global[senderID].menu; // 사용자의 현재 메뉴
-  
   // 사용자가 입력한 메시지를 처리할 함수를 꺼낸다.
   var handler = messageHandler.getHandler(messageText)
   if (handler) {// 메시지를 처리할 함수가 있다면,
@@ -29,7 +25,6 @@ const handleReceiveMessage = (event) => {
     sendAPI.sendTextMessage(senderID, "유효한 명령이 아닙니다.");
   }
 };
-
 const handleReceivePostback = (event) => {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
