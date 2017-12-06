@@ -37,9 +37,6 @@ public class DeviceControl {
     
     model.addAttribute("result", devices);
   }
-  
-  
-  
 }
 
 
