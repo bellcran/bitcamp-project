@@ -5,14 +5,12 @@ import argparse
 import json
 
 def customCallback(client, userdata, message):
-    print("메시지를 수신하였습니다. \n")
-    print("사서함 이름: \n")
+    print("메시지를 수신하였습니다.")
+    print("사서함 이름:")
     print(message.topic)
-    print("\n")
-    print("사서함 내용: \n")
+    print("사서함 내용:")
     print(message.payload)
-    print("\n")
-    print("--------------\n\n")
+    print("--------------")
 
 host = "aez0ui7qkmx0b.iot.ap-northeast-2.amazonaws.com"
 rootCAPath = "root-CA.crt"
