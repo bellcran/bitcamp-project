@@ -2,7 +2,6 @@ const sendAPI = require("./send")
 const openAPI = require("../rest-api/openapi")
 const messageHandler = require("./message-handler")
 const postbackHandler = require("./postback-handler")
-const accountkHandler = require("./accont-handler")
 const handleReceiveMessage = (event) => {
   var senderID = event.sender.id;
   var recipientID = event.recipient.id;
@@ -31,10 +30,8 @@ const handleReceivePostback = (event) => {
   var recipientID = event.recipient.id;
   var timeOfPostback = event.timestamp;
   var payload = event.postback.payload;
-
-  console.log("Received postback for user %d and page %d with payload '%s' at %d " + 
+  console.log("Received postback for user %d and page %d with payload '%s' " + 
   "at %d", senderID, recipientID, payload, timeOfPostback);
- 
   // 사용자가 클릭한 버튼의 postback 을 처리할 함수를 꺼낸다.
   var handler = postbackHandler.getHandler(payload)
   if (handler) {// postback 을 처리할 함수가 있다면,

@@ -27,7 +27,6 @@ app.use(express.static('public'))
 // => / 로 시작하는 요청이 들어오면 root.js 에서 처리
 app.use('/', require("./routes/root"))
 app.use('/webhook', require("./routes/webhook"))
-app.use('/users',  require("./routes/users")); //==========> 17.12.08 계정연결
 app.use('/hello', require("./routes/hello")) // 테스트용
 // 인증서 데이터를 로딩
 // => 다음 객체는 node HTTPS 서버를 실행할 때 사용한다.

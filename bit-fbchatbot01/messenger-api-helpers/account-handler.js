@@ -5,7 +5,7 @@ var express = require("express");
 // require bodyParser since we need to handle post data for adding a user
 var bodyParser = require("body-parser");
 /*var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/gtchatbot');
+mongoose.connect('mongodb://localhost/gtchatbot'); 
 var UserSchema = new mongoose.Schema({
  name: String,
  phone: String,
