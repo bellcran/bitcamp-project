@@ -1,8 +1,105 @@
 // 메신저 서버에게 메시지를 전달해 주는 도구 가져오기
+const castArray = require("lodash/castArray")
+const isEmpty = require("lodash/isEmpty")
 const api = require("./api")
-//////////////////////////
-// Sending helpers
-//////////////////////////
+const messages = require("./messages")
+const UserStore = require("../stores/user_store")
+// 로그인,로그아웃 필요함수
+// Turns typing indicator on.
+const typingOn = (recipientId) => {
+  return {
+    recipient: {
+      id: recipientId,
+    },
+    sender_action: 'typing_on', // eslint-disable-line camelcase
+  };
+};
+// Turns typing indicator off.
+const typingOff = (recipientId) => {
+  return {
+    recipient: {
+      id: recipientId,
+    },
+    sender_action: 'typing_off', // eslint-disable-line camelcase
+  };
+};
+// Wraps a message json object with recipient information.
+const messageToJSON = (recipientId, messagePayload) => {
+  return {
+    recipient: {
+      id: recipientId,
+    },
+    message: messagePayload,
+  };
+};
+// Send one or more messages using the Send API.
+const sendMessage = (recipientId, messagePayloads) => {
+  const messagePayloadArray = castArray(messagePayloads)
+    .map((messagePayload) => messageToJSON(recipientId, messagePayload));
+
+  api.callMessagesAPI(
+    [
+      typingOn(recipientId),
+      ...messagePayloadArray,
+      typingOff(recipientId),
+    ]);
+};
+// Send a welcome message for a non signed-in user.
+const sendLoggedOutWelcomeMessage = (recipientId) => {
+  sendMessage(
+    recipientId, [
+      {
+        text: 'Hi! 👋 Welcome to Jasper’s Market!'
+          + ' (Messenger Platform Account Linking demo)',
+      },
+      messages.createAccountMessage,
+    ]
+  );
+};
+// Send a welcome message for a signed in user.
+const sendLoggedInWelcomeMessage = (recipientId, username) => {
+  sendMessage(
+    recipientId,
+    [
+      messages.napMessage,
+      messages.loggedInMessage(username),
+    ]);
+};
+// Send a different Welcome message based on if the user is logged in.
+const sendWelcomeMessage = (recipientId) => {
+  const userProfile = UserStore.getByMessengerId(recipientId);
+  if (!isEmpty(userProfile)) {
+    sendLoggedInWelcomeMessage(recipientId, userProfile.username);
+  } else {
+    sendLoggedOutWelcomeMessage(recipientId);
+  }
+};
+// Send a successfully signed in message.
+const sendSignOutSuccessMessage = (recipientId) =>
+  sendMessage(recipientId, messages.signOutSuccessMessage);
+
+// Send a successfully signed out message.
+const sendSignInSuccessMessage = (recipientId, username) => {
+  sendMessage(
+    recipientId,
+    [
+      messages.signInGreetingMessage(username),
+      messages.signInSuccessMessage,
+    ]);
+};
+// Send a read receipt to indicate the message has been read
+const sendReadReceipt = (recipientId) => {
+  const messageData = {
+    recipient: {
+      id: recipientId,
+    },
+    sender_action: 'mark_seen', // eslint-disable-line camelcase
+  };
+
+  api.callMessagesAPI(messageData);
+};
+
+// 기존 함수
 const sendTextMessage = (recipientId, messageText) => {
   var messageData = {
     recipient: {
@@ -14,7 +111,6 @@ const sendTextMessage = (recipientId, messageText) => {
   };
   api.callMessagesAPI(messageData);
 };
-
 const sendImageMessage = (recipientId) => {
   var messageData = {
     recipient: {
@@ -32,7 +128,6 @@ const sendImageMessage = (recipientId) => {
   };
   api.callMessagesAPI(messageData);
 };
-
 const sendButton1Message = (recipientId) => {
   var messageData = {
     recipient: {
@@ -67,7 +162,6 @@ const sendButton1Message = (recipientId) => {
   };
   api.callMessagesAPI(messageData);
 };
-
 const sendButton2Message = (recipientId) => {
   var messageData = {
     recipient: {
@@ -97,7 +191,6 @@ const sendButton2Message = (recipientId) => {
   };
   api.callMessagesAPI(messageData);
 };
-
 const sendGenericMessage = (recipientId) => {
   var messageData = {
     recipient: {
@@ -144,6 +237,13 @@ const sendGenericMessage = (recipientId) => {
   api.callMessagesAPI(messageData);
 };
 module.exports = {
+  sendMessage,
+  sendWelcomeMessage,
+  sendLoggedInWelcomeMessage,
+  sendLoggedOutWelcomeMessage,
+  sendSignOutSuccessMessage,
+  sendSignInSuccessMessage,
+  sendReadReceipt,
   sendTextMessage
   //sendImageMessage,
   //sendButton1Message,

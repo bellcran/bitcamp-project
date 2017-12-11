@@ -7,6 +7,11 @@ const request = require('request');
 // .env 파일의 내용을 로딩한다.
 require('dotenv').config({path: '/home/ec2-user/vars/.env'})
 const app = express()
+/* ----------  Views  ---------- */
+const path = require('path');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.use(express.static(path.join(__dirname, 'public')));
 // json 형식으로 클라이언트가 보낸 데이터를 처리하는 객체 등록
 // => 이 객체를 등록하지 않으면 json 형식으로 전달받은 데이터를 다룰 수 없다.
 app.use(bodyParser.json()); 
@@ -17,7 +22,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // 정적 웹자원
 // => 실행하지 않고 그대로 읽어서 클라이언트에게 보내는 파일
 // => .html, .gif, .jpg, .css, .js
-app.use(express.static('public'))
+//app.use(express.static('public'))
 // 클라이언트 요청을 처리할 모듈을 가져온다.
 //import root from "./routes/root.js"
 //import webhook from "./routes/webhook.js"
@@ -27,7 +32,11 @@ app.use(express.static('public'))
 // => / 로 시작하는 요청이 들어오면 root.js 에서 처리
 app.use('/', require("./routes/root"))
 app.use('/webhook', require("./routes/webhook"))
+app.use('/users', require("./routes/users"))
 app.use('/hello', require("./routes/hello")) // 테스트용
+// 쓰레드 시작
+const ThreadSetup = require('./messenger-api-helpers/thread-setup')
+ThreadSetup.setGetStarted();
 // 인증서 데이터를 로딩
 // => 다음 객체는 node HTTPS 서버를 실행할 때 사용한다.
 // 운영서버용
