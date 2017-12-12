@@ -16,7 +16,8 @@
     "request": "^2.83.0",
     "serve-favicon": "^2.4.5",
     "uuid": "^3.0.1",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.19",
+    "aws-iot-device-sdk": "^2.2.0"
   },
   "devDependencies": {},
   "scripts": {

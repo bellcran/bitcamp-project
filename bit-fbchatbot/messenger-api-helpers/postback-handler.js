@@ -42,13 +42,20 @@ addPostback("/led", (recipientId) => {
   };
   api.callMessagesAPI(messageData);
 })
+const awsIoT = require("../iot-api/aws")
 addPostback("/led/on", (recipientId) => {
   sendAPI.sendTextMessage(recipientId, 'LED를 켭니다.')
-  // SpringBoot 와 연결한다;
+  awsIoT.publish('dev01', 'topic_1', {
+    message:'led on',
+    led: 'on'
+  })
 })
 addPostback("/led/off", (recipientId) => {
   sendAPI.sendTextMessage(recipientId, 'LED를 끕니다.')
-  // SpringBoot 와 연결한다;
+  awsIoT.publish('dev01', 'topic_1', {
+    message:'led off',
+    led: 'off'
+  })
 })
 addPostback("/addr", (recipientId) => {
   var messageData = {
