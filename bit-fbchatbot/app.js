@@ -8,9 +8,11 @@ const request = require('request');
 require('dotenv').config({path: '/home/ec2-user/vars/.env'})
 const app = express()
 /* ----------  Views  ---------- */
+const favicon = require('serve-favicon');
 const path = require('path');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 app.use(express.static(path.join(__dirname, 'public')));
 // json 형식으로 클라이언트가 보낸 데이터를 처리하는 객체 등록
 // => 이 객체를 등록하지 않으면 json 형식으로 전달받은 데이터를 다룰 수 없다.
@@ -30,7 +32,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // URL과 그 URL의 요청을 처리할 모듈을 설정한다.
 // => /webhook 으로 시작하는 요청이 들어오면 webhook.js 에서 처리
 // => / 로 시작하는 요청이 들어오면 root.js 에서 처리
-app.use('/', require("./routes/root"))
+app.use('/', require("./routes/index"))
 app.use('/webhook', require("./routes/webhook"))
 app.use('/users', require("./routes/users"))
 app.use('/hello', require("./routes/hello")) // 테스트용
