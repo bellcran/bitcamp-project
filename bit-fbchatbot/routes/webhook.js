@@ -63,8 +63,8 @@ router.post('/', (req, res) => { // narrow 문법; function 대신 화살표 사
           receiveAPI.handleReceivePostback(event);  
           //sendAPI.sendTextMessage(senderID, event.postback.payload);
         } else if (event.account_linking) { // eslint-disable-line camelcase, max-len
-          console.log('event.account_linking===> ', event.postback)
-          receiveApi.handleReceiveAccountLink(event);
+          console.log('event.account_linking===> ', event.account_linking)
+          receiveAPI.handleReceiveAccountLink(event);
           //sendAPI.sendTextMessage(senderID, event.account_linking);
         } else {
           console.log("unknown event===> ")//, event);
