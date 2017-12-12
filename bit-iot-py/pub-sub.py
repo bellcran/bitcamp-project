@@ -4,6 +4,7 @@ import logging
 import time
 import argparse
 import json
+import led_api as led
 # AWS IoT 서버에서 메시지를 받았을 때 호출될 함수 정의 
 def customCallback(client, userdata, message):
     print("메시지를 수신하였습니다.")
@@ -14,6 +15,11 @@ def customCallback(client, userdata, message):
     # 사서함에서 받은 메시지를 JSON 문자열을 객체로 변환
     dict = json.loads(message.payload.decode("UTF-8")) # Map 과 같은 용어
     print(dict['message'])
+    ledState = dict['led']
+    if ledState == "on" :
+        led.onLed(True)
+    else 
+        led.onLed(False)
     print("--------------")
 # AWS IoT의 Thing에 접속할 때 사용할 정보 준비
 # AWS에 등록한 Thing을 가리키는 URL. 
