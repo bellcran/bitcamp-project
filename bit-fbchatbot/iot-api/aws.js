@@ -13,7 +13,9 @@ dev01.on('connect', function() {
   // 연결된 장비를 목록에 추가한다.
   devices['dev01'] = dev01
 });
-function publish(deviceName, topic, dataObj) {
+const publish = (deviceName, topic, dataObj) => {
   devices['dev01'].publish(topic, JSON.stringify(dataObj))
 }
-module.exports = publish
+module.exports = {
+  publish 
+}

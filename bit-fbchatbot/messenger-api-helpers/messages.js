@@ -115,7 +115,7 @@ const getStarted = {
     },
   ],
 };
-module.exports =  {
+module.exports = {
   createAccountMessage,
   signInGreetingMessage,
   signInSuccessMessage,
