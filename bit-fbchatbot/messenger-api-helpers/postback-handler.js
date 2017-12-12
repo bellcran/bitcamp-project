@@ -96,7 +96,7 @@ addPostback("/addr/post", (recipientId) => {
 addPostback('/calc', (recipientId) => {
   sendAPI.sendTextMessage(recipientId, '식을 입력하세요.\n예)2 + 3');
 })
-addPostback('{"type":"GET_STARTED"}', (recipientId) => {
+addPostback('GET_STARTED', (recipientId) => {
   const userProfile = UserStore.getByMessengerId(recipientId);
   if (!isEmpty(userProfile)) {
     sendAPI.sendLoggedInWelcomeMessage(recipientId, userProfile.username);

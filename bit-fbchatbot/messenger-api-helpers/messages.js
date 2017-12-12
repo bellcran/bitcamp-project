@@ -105,9 +105,13 @@ const getStarted = {
   thread_state: 'new_thread',
   call_to_actions: [
     {
-      payload: JSON.stringify({
-        type: 'GET_STARTED',
-      }),
+      //"get_started":{
+      //  "payload":"GET_STARTED"
+      //}
+      //payload: JSON.stringify({
+      //  type: 'GET_STARTED',
+      //}),
+      payload: "GET_STARTED",
     },
   ],
 };

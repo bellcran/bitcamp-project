@@ -123,6 +123,15 @@ addMessage('user profile', (recipientId, messageText) => {
     sendAPI.sendTextMessage(recipientId, body);
   });
 });
+const isEmpty = require("lodash/isEmpty")
+addMessage('GET_STARTED', (recipientId) => {
+  const userProfile = UserStore.getByMessengerId(recipientId);
+  if (!isEmpty(userProfile)) {
+    sendAPI.sendLoggedInWelcomeMessage(recipientId, userProfile.username);
+  } else {
+    sendAPI.sendLoggedOutWelcomeMessage(recipientId);
+  }
+})
 module.exports = {
   getHandler
 }
