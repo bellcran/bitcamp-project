@@ -12,7 +12,7 @@ def customCallback(client, userdata, message):
     print("사서함 내용:")
     #print(message.payload)
     # 사서함에서 받은 메시지를 JSON 문자열을 객체로 변환
-    dict = json.loads(message.payload) # Map 과 같은 용어
+    dict = json.loads(message.payload.decode("UTF-8")) # Map 과 같은 용어
     print(dict['message'])
     print("--------------")
 # AWS IoT의 Thing에 접속할 때 사용할 정보 준비
