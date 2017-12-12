@@ -53,11 +53,13 @@ const handleReceiveAccountLink = (event) => {
   switch (status) {
   case 'linked':
     const linkedUser = UserStore.replaceAuthToken(authCode, senderId);
-    sendApi.sendSignInSuccessMessage(senderId, linkedUser.username);
+    console.log("UserProfile ========>", UserStore.getByMessengerId(senderId))
+    console.log("linkedUser ========>", linkedUser)
+    sendAPI.sendSignInSuccessMessage(senderId, linkedUser.username);
     break;
   case 'unlinked':
     UserStore.unlinkMessengerAccount(senderId);
-    sendApi.sendSignOutSuccessMessage(senderId);
+    sendAPI.sendSignOutSuccessMessage(senderId);
     break;
   default:
     break;

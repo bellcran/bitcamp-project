@@ -109,6 +109,29 @@ addMessage('/addr/post', (recipientId, messageText) => {
       console.log(err);
   }
 });
+const request = require('request');
+const UserStore = require("../stores/user_store")
+addMessage('user profile', (recipientId, messageText) => {
+  const userProfile = UserStore.getByMessengerId(recipientId);
+  request({
+    uri: "https://graph.facebook.com/v2.6/" + userProfile.messengerId + "?fields=first_name,last_name,profile_pic&access_token=" + process.env.PAGE_ACCESS_TOKEN ,
+    method: 'GET'
+  }, function (error, response, body) {
+    console.log('====> Status', response.statusCode);
+    console.log('====> Headers', JSON.stringify(response.headers));
+    console.log('====> Reponse received', body);
+    sendAPI.sendTextMessage(recipientId, body);
+  });
+});
+const isEmpty = require("lodash/isEmpty")
+addMessage('GET_STARTED', (recipientId) => {
+  const userProfile = UserStore.getByMessengerId(recipientId);
+  if (!isEmpty(userProfile)) {
+    sendAPI.sendLoggedInWelcomeMessage(recipientId, userProfile.username);
+  } else {
+    sendAPI.sendLoggedOutWelcomeMessage(recipientId);
+  }
+})
 module.exports = {
   getHandler
 }
