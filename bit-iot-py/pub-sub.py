@@ -18,7 +18,7 @@ def customCallback(client, userdata, message):
     ledState = dict['led']
     if ledState == "on" :
         led.onLed(True)
-    else 
+    else :
         led.onLed(False)
     print("--------------")
 # AWS IoT의 Thing에 접속할 때 사용할 정보 준비
