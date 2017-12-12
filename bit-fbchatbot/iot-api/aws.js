@@ -6,7 +6,7 @@ const dev01 = awsIot.device({
   certPath: '/home/ec2-user/vars/aws-iot/dev01/dev01.cert.pem',
     caPath: '/home/ec2-user/vars/aws-iot/root-CA.crt',
   clientId: 'fbchatbot',
-      host: 'aez0ui7qkmx0b.iot.ap-northeast-2.amazonaws.com'
+      host: process.env.DEV01_HOST
 });
 dev01.on('connect', function() {
   console.log('AWS IoT 의 dev01 장비와 연결 되었음.')
