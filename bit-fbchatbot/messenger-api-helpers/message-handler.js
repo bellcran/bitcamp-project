@@ -15,7 +15,7 @@ const getHandler = (message) => {
   return messageHandler[message];
 }
 // "help" 메시지를 처리할 함수 등록
-addMessage("help", (recipientId) => {
+addMessage("menu", (recipientId) => {
   var messageData = {
     recipient: {
       id: recipientId
