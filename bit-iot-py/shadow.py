@@ -61,3 +61,4 @@ myDeviceShadow = myShadowClient.createShadowHandlerWithName("dev01", True)
 # AWS IoT SDK - github "/samples/basicShadow/basicShadowUpdater.py" 참고
 #myJSONPayload = '{"state":{"desired":{"led":"on"}}}'
 #myDeviceShadow.shadowUpdate(myJSONPayload, updateCallback, 5)
+myDeviceShadow.shadowGet(getCallback, 5)
