@@ -7,13 +7,14 @@ import json
 import led_api as led
 # shadow 명령 실행 후, 호출될 함수 정의
 # AWS IoT 디바이스 SDK - Python - github - 페이지 하단 "API Documentation" 클릭 - 페이지에서 아규먼트 타입 확인
+# shadow 값을 변경 후 실행되는 함수
 def updateCallback(payload, responseStatus, token):
     print("update 명령 수행 후 실행되었다.")
     print(payload)
     print(responseStatus)
     print(token)
     print("------------------------------")
-# 
+# shadow 값을 가져온 후 실행되는 함수
 def getCallback(payload, responseStatus, token):
     print("get 명령 수행 후 실행되었다.")
     # AWSIoT 서버에서 받은 JSON 문자열을 객체로 변환
@@ -28,6 +29,10 @@ def getCallback(payload, responseStatus, token):
         print("현재 새도우 값이다.")
         print(dict['state']['desired']['led'])
         print(token)
+        if dict['state']['desired']['led'] == "on" :
+            led.onLed(True)
+        else :
+            led.onLed(False)
     print("------------------------------")
 # AWS IoT의 Thing에 접속할 때 사용할 정보 준비
 # AWS에 등록한 Thing을 가리키는 URL. 
