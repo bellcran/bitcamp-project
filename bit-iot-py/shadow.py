@@ -6,8 +6,16 @@ import argparse
 import json
 import led_api as led
 # shadow 명령 실행 후, 호출될 함수 정의
-# AWS IoT 디바이스 SDK - Python - 페이지 하단 "API Documentation"에서 아규먼트 타입 확인
+# AWS IoT 디바이스 SDK - Python - github - 페이지 하단 "API Documentation" 클릭 - 페이지에서 아규먼트 타입 확인
 def updateCallback(payload, responseStatus, token):
+    print("update 명령 수행 후 실행되었다.")
+    print(payload)
+    print(responseStatus)
+    print(token)
+    print("------------------------------")
+
+def getCallback(payload, responseStatus, token):
+    print("get 명령 수행 후 실행되었다.")
     print(payload)
     print(responseStatus)
     print(token)
@@ -51,5 +59,5 @@ print("shadow connect\n")
 myDeviceShadow = myShadowClient.createShadowHandlerWithName("dev01", True)
 # shadow 값 변경하기
 # AWS IoT SDK - github "/samples/basicShadow/basicShadowUpdater.py" 참고
-myJSONPayload = '{"state":{"desired":{"led":"on"}}}'
-myDeviceShadow.shadowUpdate(myJSONPayload, updateCallback, 5)
+#myJSONPayload = '{"state":{"desired":{"led":"on"}}}'
+#myDeviceShadow.shadowUpdate(myJSONPayload, updateCallback, 5)
