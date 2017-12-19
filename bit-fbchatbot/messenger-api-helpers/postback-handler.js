@@ -16,7 +16,7 @@ const getHandler = (postback) => {
 addPostback("/led", (recipientId) => {
   var messageData = {
     recipient: {
-      id: recipientId
+      id: recipientId 
     },
     message: {
       "attachment":{
@@ -42,7 +42,16 @@ addPostback("/led", (recipientId) => {
   };
   api.callMessagesAPI(messageData);
 })
-const awsIoT = require("../iot-api/aws")
+const awsIoTShadow = require("../iot-api/shadow")
+addPostback("/led/on", (recipientId) => {
+  sendAPI.sendTextMessage(recipientId, 'LED를 켭니다.')
+  awsIoTShadow.update({led: "on"})
+})
+addPostback("/led/off", (recipientId) => {
+  sendAPI.sendTextMessage(recipientId, 'LED를 끕니다.')
+  awsIoTShadow.update({led: "off"})
+})
+/*const awsIoT = require("../iot-api/aws")
 addPostback("/led/on", (recipientId) => {
   sendAPI.sendTextMessage(recipientId, 'LED를 켭니다.')
   awsIoT.publish('dev01', 'topic_1', {
@@ -57,6 +66,7 @@ addPostback("/led/off", (recipientId) => {
     led: 'off'
   })
 })
+*/
 addPostback("/addr", (recipientId) => {
   var messageData = {
     recipient: {
