@@ -13,12 +13,17 @@ def updateCallback(payload, responseStatus, token):
     print(responseStatus)
     print(token)
     print("------------------------------")
-
+# 
 def getCallback(payload, responseStatus, token):
     print("get 명령 수행 후 실행되었다.")
-    print(payload)
-    print(responseStatus)
-    print(token)
+    # AWSIoT 서버에서 받은 JSON 문자열을 객체로 변환
+    dict = json.loads(payload.decode("UTF-8"))
+    if responseStatus == "rejected" and dict['code'] == 404 :
+        print("새도우가 존재하지 않습니다.")
+    else :
+        print(dict['state']['desired']['led'])
+        print(token)
+    print("------------------------------")
 # AWS IoT의 Thing에 접속할 때 사용할 정보 준비
 # AWS에 등록한 Thing을 가리키는 URL. 
 # AWS IoT 사물 관리 페이지에서 "상호작용" 메뉴에서 
