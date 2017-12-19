@@ -20,7 +20,12 @@ def getCallback(payload, responseStatus, token):
     dict = json.loads(payload) # payload 는 str 객체이다.
     if responseStatus == "rejected" and dict['code'] == 404 :
         print("새도우가 존재하지 않습니다.")
+        # shadow 기본값 설정하기
+        # AWS IoT SDK - github "/samples/basicShadow/basicShadowUpdater.py" 참고
+        myJSONPayload = '{"state":{"desired":{"led":"on"}}}'
+        myDeviceShadow.shadowUpdate(myJSONPayload, updateCallback, 5)
     else :
+        print("현재 새도우 값이다.")
         print(dict['state']['desired']['led'])
         print(token)
     print("------------------------------")
@@ -62,8 +67,6 @@ myShadowClient.connect()
 print("shadow connect\n")
 # thing shadow 객체 생성
 myDeviceShadow = myShadowClient.createShadowHandlerWithName("dev01", True)
-# shadow 값 변경하기
+# shadow 값 가져오기
 # AWS IoT SDK - github "/samples/basicShadow/basicShadowUpdater.py" 참고
-#myJSONPayload = '{"state":{"desired":{"led":"on"}}}'
-#myDeviceShadow.shadowUpdate(myJSONPayload, updateCallback, 5)
 myDeviceShadow.shadowGet(getCallback, 5)
